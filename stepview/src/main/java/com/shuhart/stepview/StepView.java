@@ -16,6 +16,7 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.Dimension;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewCompat;
 import android.text.Layout;
@@ -29,6 +30,7 @@ import com.shuhart.stepview.animation.AnimatorListener;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,9 +112,13 @@ public class StepView extends View {
     private int doneStepMarkColor;
     private int animationDuration;
 
+    @ColorInt
+    private int inactiveStepBorderColor;
+
     private Paint paint;
     private TextPaint textPaint;
     private ValueAnimator animator;
+    private Paint borderPaint;
 
     private int[] circlesX;
     private int[] startLinesX;
@@ -126,6 +132,9 @@ public class StepView extends View {
 
     private Rect bounds = new Rect();
 
+    private Typeface currentTypeFace;
+    private Typeface boldTypeFace;
+
     public StepView(Context context) {
         this(context, null);
     }
@@ -138,9 +147,14 @@ public class StepView extends View {
         super(context, attrs, defStyleAttr);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setTextAlign(Paint.Align.CENTER);
+        borderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        borderPaint.setStyle(Paint.Style.STROKE);
+        borderPaint.setStrokeWidth(context.getResources().getDimensionPixelSize(R.dimen._1dp));
         textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setTextAlign(Paint.Align.CENTER);
         applyStyles(context, attrs, defStyleAttr);
+        currentTypeFace = paint.getTypeface();
+        boldTypeFace = Typeface.create(currentTypeFace, Typeface.BOLD);
         drawEditMode();
     }
 
@@ -165,6 +179,7 @@ public class StepView extends View {
         animationDuration = ta.getInteger(R.styleable.StepView_sv_animationDuration, 0);
         animationType = ta.getInteger(R.styleable.StepView_sv_animationType, 0);
         stepsNumber = ta.getInteger(R.styleable.StepView_sv_stepsNumber, 0);
+        inactiveStepBorderColor = ta.getColor(R.styleable.StepView_sv_inactiveBorderColor, Color.parseColor("#bdbdbd"));
         CharSequence[] descriptions = ta.getTextArray(R.styleable.StepView_sv_steps);
         if (descriptions != null) {
             for (CharSequence description : descriptions) {
@@ -187,6 +202,7 @@ public class StepView extends View {
             }
         }
         textPaint.setTextSize(textSize);
+        borderPaint.setColor(inactiveStepBorderColor);
         ta.recycle();
     }
 
@@ -650,7 +666,9 @@ public class StepView extends View {
             paint.setColor(doneCircleColor);
             canvas.drawCircle(circleCenterX, circleCenterY, doneCircleRadius, paint);
 
-            drawCheckMark(canvas, circleCenterX, circleCenterY);
+            paint.setColor(selectedStepNumberColor);
+            paint.setTextSize(stepNumberTextSize);
+            drawNumber(canvas, number, circleCenterX, paint);
 
             if (state == ANIMATE_STEP_TRANSITION && step == nextAnimatedStep && nextAnimatedStep < currentStep) {
                 paint.setColor(selectedTextColor);
@@ -691,6 +709,7 @@ public class StepView extends View {
                 textPaint.setColor(nextTextColor);
                 int alpha = (int) Math.max(Color.alpha(nextTextColor), animatedFraction * 255);
                 textPaint.setAlpha(alpha);
+                canvas.drawCircle(circleCenterX, circleCenterY, doneCircleRadius, borderPaint);
                 drawText(canvas, text, textY, step);
             } else {
                 paint.setColor(nextTextColor);
@@ -700,15 +719,18 @@ public class StepView extends View {
 
                 textPaint.setTextSize(textSize);
                 textPaint.setColor(nextTextColor);
+                canvas.drawCircle(circleCenterX, circleCenterY, doneCircleRadius, borderPaint);
                 drawText(canvas, text, textY, step);
             }
         }
     }
 
     private void drawNumber(Canvas canvas, String number, int circleCenterX, Paint paint) {
+        paint.setTypeface(boldTypeFace);
         paint.getTextBounds(number, 0, number.length(), bounds);
         float y = circlesY + bounds.height() / 2f - bounds.bottom;
         canvas.drawText(number, circleCenterX, y, paint);
+        paint.setTypeface(currentTypeFace);
     }
 
     private void drawText(Canvas canvas, String text, int y, int step) {

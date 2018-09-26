@@ -2,8 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
+    android:layout_height="match_parent">
 
     <include
         android:id="@+id/step_view_1"
@@ -31,9 +30,15 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:sv_animationType="All"
-            app:sv_stepPadding="12dp"
-            app:sv_typeface="@font/iran_sans_mobile"
-            app:sv_stepsNumber="5"/>
+            app:sv_selectedCircleColor="@android:color/holo_red_light"
+            app:sv_doneCircleColor="@android:color/holo_red_light"
+            app:sv_doneCircleRadius="17dp"
+            app:sv_doneTextColor="@android:color/white"
+            app:sv_selectedCircleRadius="17dp"
+            app:sv_stepLineWidth="4dp"
+            app:sv_stepPadding="0dp"
+            app:sv_stepsNumber="5"
+            app:sv_typeface="@font/iran_sans_mobile" />
 
         <Button
             android:id="@+id/next_2"

@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimary"
     android:paddingBottom="8dp"
     android:paddingTop="8dp"
     tools:context=".main.MainActivity">
@@ -17,7 +16,22 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:sv_animationType="All"
-        app:sv_stepPadding="12dp"
+        app:sv_doneCircleColor="#3c9d7a"
+        app:sv_doneCircleRadius="17dp"
+        app:sv_doneStepLineColor="#3c9d7a"
+        app:sv_doneTextColor="#3c9d7a"
+        app:sv_nextStepLineColor="#bdbdbd"
+        app:sv_nextTextColor="#bdbdbd"
+        app:sv_textPadding="0dp"
+        app:sv_selectedCircleColor="#3c9d7a"
+        app:sv_selectedCircleRadius="17dp"
+        app:sv_selectedStepNumberColor="#ffffff"
+        app:sv_selectedTextColor="#3c9d7a"
+        app:sv_stepLineWidth="4dp"
+        app:sv_stepNumberTextSize="18sp"
+        app:sv_stepPadding="0dp"
+        app:sv_stepsNumber="5"
+        app:sv_textSize="10sp"
         app:sv_typeface="@font/iran_sans_mobile" />
 
     <Button
@@ -26,8 +40,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:text="@string/btn_next"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/back"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/step_view" />
 
     <Button
@@ -36,8 +50,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:text="@string/btn_back"
-        app:layout_constraintRight_toLeftOf="@+id/next"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/next"
         app:layout_constraintTop_toBottomOf="@id/step_view" />
 
 </android.support.constraint.ConstraintLayout>
